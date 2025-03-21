@@ -1,0 +1,9 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: notesapp-config
+  namespace: notesapp
+data:
+  DB_NAME: notesapp
+  DB_USER: root
+  MYSQL_DATABASE: notesapp

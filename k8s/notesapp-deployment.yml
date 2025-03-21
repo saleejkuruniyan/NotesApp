@@ -1,0 +1,52 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: notesapp-deployment
+  namespace: notesapp
+  labels:
+    app: notesapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notesapp
+  template:
+    metadata:
+      name: notesapp
+      labels:
+        app: notesapp
+    spec:
+      containers:
+      - name: notesapp
+        image: saleejkuruniyan/notes-app:latest
+        command: ["./manage.py", "runserver", "0.0.0.0:8000"]
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1024Mi"
+            cpu: "800m"
+        env:
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: notesapp-config
+              key: DB_NAME
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: notesapp-config
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: notesapp-secrets
+              key: DB_PASSWORD
+        - name: DB_HOST
+          value: mysql-service
+        - name: DB_PORT
+          value: "3306"
+          
